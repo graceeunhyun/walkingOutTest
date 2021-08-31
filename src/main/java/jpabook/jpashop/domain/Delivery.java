@@ -8,5 +8,13 @@ import lombok.Setter;
 @Setter
 public class Delivery {
 
+    @Id @GeneratedValue @Column(name="delivery_id")
+    Long deliverId;
+
+    @Embedded
+    private Address address;
+
+    @Enumerated
+    private DeliveryStatus status;
 
 }
