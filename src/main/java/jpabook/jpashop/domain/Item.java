@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +21,20 @@ public abstract class Item {
     private String name;
     private int price;
     private int stockQuantity;
+
+    /** 비즈니스 로직 추가 **/
+    public void addStock(int quantity) {
+        this.stockQuantity += quantity;
+    }
+
+    public void removeStock(int quantity) {
+        int restStock = this.stockQuantity -= quantity;
+        if ( restStock < 0 ) {
+            throw new NotEnoughStockException("need more stock");
+        }
+        this.stockQuantity = restStock;
+    }
+
 
 };
 

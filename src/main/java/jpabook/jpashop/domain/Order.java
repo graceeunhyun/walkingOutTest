@@ -9,10 +9,13 @@ import java.util.Date;
 @Table(name="orders")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     @GeneratedValue
     @Id @Column(name="order_id")
-    String orderId;
+    Long orderId;
     String orderNm;
     Date orderDt;
 
@@ -29,4 +32,14 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    /** 비즈니스 로직 **/
+    public void cancel() {
+        if(delivery.getStatus() == DeliveryStatus.COMP) {
+            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
+        }
+
+        this.setStatus(OrderStatus.CANCEL);
+    }
+
 }
