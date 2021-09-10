@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-//@RestController
-//public class MemberController {
-//    private final MemberRepository repository;
-//    MemberController(MemberRepository repository) {
-//        this.repository = repository;
-//    }
-//
-//    @GetMapping("/members")
-//    List<Member> all() {
-//        return repository.findAll();
-//    }
-//
-//    @PostMapping("/members")
-//    Member newMember(@RequestBody Member newMember) {
-//        return repository.save(newMember);
-//    }
-//
-//}
+@RestController
+public class MemberController {
+    private final MemberRepository repository;
+    MemberController(MemberRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/members")
+    List<Member> all() {
+        return repository.findAll();
+    }
+
+    @PostMapping("/members")
+    Member newMember(@RequestBody Member newMember) {
+        return repository.save(newMember);
+    }
+
+}
