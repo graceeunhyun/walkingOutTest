@@ -2,11 +2,11 @@ spring:
   datasource:
     url: jdbc:h2:tcp://localhost/~/test
     username: sa
-    password:
+    password: sa
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
 # show_sql: true

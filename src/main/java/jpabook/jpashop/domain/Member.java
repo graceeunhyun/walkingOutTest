@@ -24,4 +24,8 @@ public class Member {
     @Embedded
     private Address address;
 
+    @ManyToOne
+    @JoinColumn(name="team_id")
+    private Team team;
+
 }

@@ -13,6 +13,8 @@ import java.util.Optional;
 
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class MemberService {
     // 생성자 주입의 방식
 //    private final MemberRepository memberRepository;
@@ -45,8 +47,25 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
+    /** 회원 조회 **/
+    public List<Member> findMember(String name){
+        return memberRepository.findByUserName(name);
+    }
+
+    public List<Member> findUser(String name){
+        return memberRepository.findUser(name);
+    }
+
     public Optional<Member> findOne(Long memberID) {
         return memberRepository.findById(memberID);
+    }
+
+    /** 회원 수정 **/
+    /** 변경감지로 인하여 수정이 이해 */
+    @Transactional
+    public void update(Long id, String name) {
+        Member member = memberRepository.findById(id).get();
+        member.setUserName(name);
     }
 
 }
