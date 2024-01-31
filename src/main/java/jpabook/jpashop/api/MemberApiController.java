@@ -1,6 +1,9 @@
 package jpabook.jpashop.api;
 
+import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Team;
+import jpabook.jpashop.repository.TeamRepository;
 import jpabook.jpashop.service.MemberService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,9 +16,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+
 public class MemberApiController {
 
     private final MemberService memberService;
+    private final TeamRepository teamRepository;
 
     /**
      * 등록 V1: 요청 값으로 Member 엔티티를 직접 받는다.
@@ -27,17 +32,20 @@ public class MemberApiController {
      * 결론
      * - API 요청 스펙에 맞추어 별도의 DTO를 파라미터로 받는다.
      */
-    @PostMapping("/api/v1/members")
-    public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member) {
-        Long id = memberService.join(member);
-        return new CreateMemberResponse(id);
-    }
+    // @PostMapping("/api/v1/members")
+    // public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member) {
+    //     Long id = memberService.join(member);
+    //     return new CreateMemberResponse(id);
+    // }
 
     @PostMapping("/api/v2/members")
     public CreateMemberResponse saveMemberV2(@RequestBody @Valid CreateMemberRequest request) {
 
         Member member = new Member();
         member.setUserName(request.getName());
+
+        Team team = teamRepository.findById(request.teamId).orElse(null);
+        member.setTeam(team);
 
         Long id = memberService.join(member);
         return new CreateMemberResponse(id);
@@ -54,16 +62,17 @@ public class MemberApiController {
         return new UpdateMemberResponse(findMember.getId(), findMember.getUserName());
     }
 
-    @GetMapping("/api/v1/members")
-    public List<Member> membersV1() {
-        return memberService.findMembers();
-    }
+    // @GetMapping("/api/v1/members")
+    // public List<Member> membersV1() {
+    //     return memberService.findMembers();
+    // }
 
     @GetMapping("/api/v2/members")
     public Result memberV2() {
         List<Member> findMembers = memberService.findMembers();
         List<MemberDto> collect = findMembers.stream()
-                .map(m -> new MemberDto(m.getUserName()))
+                .map(m ->
+                    new MemberDto(m.getUserName(), m.getAddress(), (m.getTeam() != null)? m.getTeam().getId() : null))
                 .collect(Collectors.toList());
         /**collection 바로 넣으면 배열 형태로 하면 json 으로 나온다.**/
         return new Result(collect.size(), collect);
@@ -81,6 +90,8 @@ public class MemberApiController {
     @AllArgsConstructor
     static class MemberDto {
         private String name;
+        private Address address;
+        private Long teamName;
     }
 
     @Data
@@ -98,6 +109,8 @@ public class MemberApiController {
     @Data
     static class CreateMemberRequest {
         private String name;
+        private Long teamId;
+
     }
 
     @Data

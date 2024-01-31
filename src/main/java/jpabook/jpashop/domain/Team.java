@@ -23,6 +23,7 @@ public class Team {
     @Column(name="team_id")
     private Long id;
 
+    @Column(name="name")
     private String name;
 
     @OneToMany(targetEntity = Member.class)
