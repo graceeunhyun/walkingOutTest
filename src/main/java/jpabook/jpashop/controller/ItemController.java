@@ -31,7 +31,7 @@ public class ItemController {
     }
 
     @GetMapping("/read/items")
-    public Page<Item> readItems(@RequestParam(defaultValue = "0") int page,
+    public Page<Item> readItems(@RequestParam(defaultValue = "0", required = true) int page,
         @RequestParam(defaultValue = "10") int size) {
         return itemService.getAllEntities(page, size);
     }
